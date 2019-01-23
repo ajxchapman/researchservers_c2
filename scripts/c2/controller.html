@@ -37,7 +37,7 @@ function run_cmd() {
 
 function check_cmd() {
   Array.from(pending_commands).forEach(id => {
-    fetch(`${path}/get_result/${id}`)
+    fetch(`${path}/get_result?id=${id}`)
     .then(response => response.json())
     .then(json => {
       var pre = document.getElementById(`cmd_${id}`);

