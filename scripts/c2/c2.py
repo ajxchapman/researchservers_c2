@@ -111,7 +111,11 @@ class RebindPage(Resource):
             else:
                 request.setResponseCode(204)
 
+        elif path.startswith("/get_id"):
+            response = json.dumps({"id" : hostid})
+
         else:
+            print("unknown_path: {}".format(path))
             request.setResponseCode(404)
 
         return response.encode()
