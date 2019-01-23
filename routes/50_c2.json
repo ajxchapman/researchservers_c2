@@ -1,28 +1,22 @@
 [
   {
     "protocol" : "http",
-    "route" : "c2([a-z0-9]+)?\\.webhooks\\.pw/(index.html|runme.sh)$",
+    "route" : "((c2[a-z0-9]+)\\.{domain}(/.*)?|{domain}/(c2[a-z0-9]+)/)(controller.html|runme.sh)$",
     "replace" : [
 	    {
 		    "pattern" : "__HOSTNAME__",
 		    "replacement" : "{hostname}"
+	    },
+      {
+		    "pattern" : "__PATH__",
+		    "replacement" : "{path}"
 	    }
     ],
-    "path" : "./scripts/c2/$2"
+    "path" : "./scripts/c2/$5"
   },
   {
     "protocol" : "http",
-    "route" : "^/c2([a-z0-9]+)?/index.html$",
-    "path" : "./scripts/c2/index.html"
-  },
-  {
-    "protocol" : "http",
-    "route" : "c2([a-z0-9]+)?\\.webhooks\\.pw",
-    "path" : "./scripts/c2/c2.py"
-  },
-  {
-    "protocol" : "http",
-    "route" : "^/c2([a-z0-9]+)/",
+    "route" : "((c2[a-z0-9]+)\\.{domain}(/.*)?|{domain}/(c2[a-z0-9]+)/)?",
     "path" : "./scripts/c2/c2.py"
   }
 ]
