@@ -1,6 +1,6 @@
 # ResearchServers C2
 
-A simple, single user, Command & Control server built on top of ajxchapman/researchservers.
+A simple, single user, Command & Control server built on top of [ajxchapman/researchservers.](https://github.com/ajxchapman/researchservers)
 
 **NOTE:** This does not implement *any* authentication. Anyone with knowledge of the URL a client connects over will be able to issue commands to the client.
 
