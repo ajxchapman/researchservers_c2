@@ -14,9 +14,11 @@ class RebindPage(Resource):
     def get_c2(self, request):
         hostname = request.getRequestHostname().decode()
         path = request.path.decode()
+
+        c2id, path = (path.split("/")[1], "/" + "/".join(path.split("/")[2:]))
         if hostname.startswith("c2"):
-            return (hostname.split(".")[0], path)
-        return (path.split("/")[1], "/" + "/".join(path.split("/")[2:]))
+            c2id = hostname.split(".")[0] + c2id
+        return c2id, path
 
     def render_POST(self, request):
         hostid, path = self.get_c2(request)
@@ -116,4 +118,3 @@ class RebindPage(Resource):
 
 def get_resource(request):
     return RebindPage()
-

