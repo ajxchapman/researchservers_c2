@@ -25,7 +25,7 @@ class RebindPage(Resource):
         result_queue.setdefault(hostid, {})
         cmd_queue.setdefault(hostid, [])
         data_queue.setdefault(hostid, {})
-        response = b''
+        response = ""
 
         request_body = request.content.read().decode()
         if path.startswith("/put_cmd"):
@@ -38,7 +38,7 @@ class RebindPage(Resource):
 
                 cmd_queue[hostid].append((id, foreground, cmd))
                 result_queue[hostid][id] = None
-                response = json.dumps({"id": id}).encode()
+                response = json.dumps({"id": id})
             except (json.decoder.JSONDecodeError, KeyError):
                 request.setResponseCode(500)
 
@@ -71,14 +71,14 @@ class RebindPage(Resource):
 
         else:
             request.setResponseCode(404)
-        return response
+        return response.encode()
 
     def render_GET(self, request):
         hostid, path = self.get_c2(request)
         result_queue.setdefault(hostid, {})
         cmd_queue.setdefault(hostid, [])
         data_queue.setdefault(hostid, {})
-        response = b''
+        response = ""
 
         if path.startswith("/clear"):
             result_queue[hostid].clear()
@@ -90,31 +90,31 @@ class RebindPage(Resource):
             try:
                 id = int(path.split("/")[2])
                 if result_queue[hostid][id] is not None:
-                    response = json.dumps({"state": "complete", "result" : result_queue[hostid][id]}).encode()
+                    response = json.dumps({"state": "complete", "result" : result_queue[hostid][id]})
                     del result_queue[hostid][id]
                 else:
-                    response = json.dumps({"state": "pending"}).encode()
+                    response = json.dumps({"state": "pending"})
             except (IndexError, ValueError, KeyError) as e:
                 request.setResponseCode(500)
-                response = str(e).encode()
+                response = str(e)
 
         elif path.startswith("/get_data"):
             if len(data_queue[hostid]):
-                response = json.dumps(data_queue[hostid]).encode()
+                response = json.dumps(data_queue[hostid])
                 data_queue[hostid].clear()
             else:
                 request.setResponseCode(204)
 
         elif path.startswith("/get_cmd"):
             if len(cmd_queue[hostid]):
-                response = "{0},{1},{2}".format(*cmd_queue[hostid].pop(0)).encode()
+                response = "{0},{1},{2}".format(*cmd_queue[hostid].pop(0))
             else:
                 request.setResponseCode(204)
 
         else:
             request.setResponseCode(404)
 
-        return response
+        return response.encode()
 
 def get_resource(request):
     return RebindPage()
