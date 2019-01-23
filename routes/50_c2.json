@@ -1,7 +1,7 @@
 [
   {
     "protocol" : "http",
-    "route" : "((c2[a-z0-9]+)\\.{domain}(/.*)?|{domain}/(c2[a-z0-9]+)/)(controller.html|runme.sh)$",
+    "route" : "((c2[a-z0-9]*)\\.{domain}(/.*)?|{domain}/(c2[a-z0-9]*)/)(controller.html|runme.sh)$",
     "replace" : [
 	    {
 		    "pattern" : "__HOSTNAME__",
@@ -16,7 +16,7 @@
   },
   {
     "protocol" : "http",
-    "route" : "((c2[a-z0-9]+)\\.{domain}(/.*)?|{domain}/(c2[a-z0-9]+)/)?",
+    "route" : "((c2[a-z0-9]*)\\.{domain}(/.*)?|{domain}/(c2[a-z0-9]*)/)?",
     "path" : "./scripts/c2/c2.py"
   }
 ]
