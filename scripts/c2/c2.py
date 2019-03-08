@@ -57,7 +57,7 @@ class RebindPage(Resource):
                 if len(request_body) > 0:
                     if all(x in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=" for x in request_body.replace("\n", "").replace("\r", "")):
                         try:
-                            request_body = base64.b64decode(request_body)
+                            request_body = base64.b64decode(request_body).decode()
                         except:
                             pass
                     result_queue[hostid][id] = request_body
