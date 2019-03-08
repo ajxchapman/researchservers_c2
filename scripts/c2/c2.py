@@ -55,6 +55,11 @@ class RebindPage(Resource):
             try:
                 id = int(request.args[b'id'][0])
                 if len(request_body) > 0:
+                    if all(x in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=" for x in request_body.replace("\n", "").replace("\r", "")):
+                        try:
+                            request_body = base64.b64decode(request_body)
+                        except:
+                            pass
                     result_queue[hostid][id] = request_body
                 else:
                     result_queue[hostid][id] = "<No data received>"
