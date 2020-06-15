@@ -3,14 +3,18 @@
     "protocol" : "http",
     "route" : "((c2[a-z0-9]*)\\.{domain}(/.*)?|{domain}/(c2[a-z0-9]*)/)(controller.html|runme.sh)$",
     "replace" : [
-	    {
-		    "pattern" : "__HOSTNAME__",
-		    "replacement" : "{hostname}"
-	    },
       {
-		    "pattern" : "__PATH__",
-		    "replacement" : "{path}"
-	    }
+        "pattern" : "__SCHEME__",
+        "replacement" : "{scheme}"
+      },
+      {
+        "pattern" : "__HOSTNAME__",
+        "replacement" : "{hostname}"
+      },
+      {
+        "pattern" : "__PATH__",
+        "replacement" : "{path}"
+      },
     ],
     "path" : "./scripts/c2/$5"
   },
